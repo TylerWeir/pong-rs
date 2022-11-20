@@ -1,4 +1,5 @@
-use crate::command::Cmd;
+use crate::command::MoveCommand;
+use crate::command::Moveable;
 
 // Represents a paddle in the game pong. Note that a paddle 
 // can be either a human player or a computer player. Paddles
@@ -8,6 +9,16 @@ pub struct Paddle {
     y: i16,
     height: u16,
     width: u16,
+}
+
+impl Moveable for &mut Paddle {
+    fn add_x(&mut self, value: i16) {
+        self.x = self.x + value;
+    }
+
+    fn add_y(&mut self, value: i16) {
+        self.y = self.y + value;
+    }
 }
 
 impl Paddle {
@@ -43,8 +54,8 @@ impl Paddle {
 
     // The paddle receives commands and executes them here.
     // pretty slick stuff if you ask me
-    pub fn do_cmd(&self, cmd: impl Cmd) -> &str {
-        cmd.execute();
+    pub fn do_cmd(&mut self, cmd: impl MoveCommand) -> &str {
+        cmd.execute(self);
         "hello"
     }
 }

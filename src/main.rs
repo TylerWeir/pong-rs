@@ -6,11 +6,11 @@ mod game;
 fn main() {
     println!("Hello, world!");
 
-    let player1 = paddle::Paddle::new();
+    let mut player1 = paddle::Paddle::new();
     
     loop {
         // Get Input
-        let my_cmd = command::MoveUp{};          
+        let my_cmd = crate::command::MoveUp{};          
         player1.do_cmd(my_cmd);
 
         // Render
