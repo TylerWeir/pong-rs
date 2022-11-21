@@ -1,6 +1,9 @@
 use crate::command::MoveCommand;
 use crate::command::Moveable;
 
+extern crate ncurses;
+use ncurses::*;
+
 // Represents a paddle in the game pong. Note that a paddle 
 // can be either a human player or a computer player. Paddles
 // accept input the form of commands.
@@ -58,5 +61,40 @@ impl Paddle {
         cmd.execute(self);
         "hello"
     }
+
+    pub fn draw(&self, y: i32, x: i32) {
+        mvaddstr(y, x, "Paddle:");
+        mvaddstr(y+1, x, format!("X: {}", self.x).as_ref());
+        mvaddstr(y+2, x, format!("Y: {}", self.y).as_ref());
+        mvaddstr(y+3, x, format!("Width: {}", self.width).as_ref());
+        mvaddstr(y+4, x, format!("Height: {}", self.height).as_ref());
+    }
 }
 
+#[cfg(test)]
+mod tests {
+    use crate::command;
+    use crate::paddle::Paddle;
+
+    #[test]
+    fn test_new() {
+        let my_paddle = Paddle::new();
+        assert!(my_paddle.get_x() == 0);
+        assert!(my_paddle.get_y() == 0);
+        assert!(my_paddle.get_width() == 0);
+        assert!(my_paddle.get_height() == 0);
+    }
+
+    #[test]
+    fn test_cmds() {
+        let mut my_paddle = Paddle::new();
+        my_paddle.do_cmd(command::MoveUp{});
+        my_paddle.do_cmd(command::MoveUp{});
+        my_paddle.do_cmd(command::MoveRight{});
+
+        assert!(my_paddle.get_x() == 1);
+        assert!(my_paddle.get_y() == 2);
+        assert!(my_paddle.get_width() == 0);
+        assert!(my_paddle.get_height() == 0);
+    }
+}

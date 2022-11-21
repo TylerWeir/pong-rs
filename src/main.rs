@@ -3,23 +3,24 @@ mod command;
 mod ball;
 mod game;
 
+extern crate ncurses;
+use ncurses::*;
+
 fn main() {
-    println!("Hello, world!");
+    initscr();      /* Put the terminal in curses mode */
+    let mut my_paddle = paddle::Paddle::new();
 
-    let mut player1 = paddle::Paddle::new();
-    
     loop {
-        // Get Input
-        let my_cmd = crate::command::MoveUp{};          
-        player1.do_cmd(my_cmd);
+        // Move
+        my_paddle.do_cmd(command::MoveRight{});
+        my_paddle.do_cmd(command::MoveUp{});
 
-        // Render
-        
-        // Render Game
-        println!("x reads: {}", player1.get_x());
-        println!("y reads: {}", player1.get_y());
-        println!("width reads: {}", player1.get_width());
-        println!("height reads: {}", player1.get_height());
-        println!();
+        // Draw the scene
+        clear();        /* Clear the scene before drawing*/
+        my_paddle.draw(my_paddle.get_y() as i32, my_paddle.get_x() as i32);
+
+        // Draw to the screen and wait
+        refresh();
+        std::thread::sleep(std::time::Duration::from_millis(100));
     }
 }
