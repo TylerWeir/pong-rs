@@ -23,6 +23,7 @@ impl SolidBody for Ball {
             self.x = getmaxx(self.window) as i16 - self.size;
             self.vx = self.vx*(-1);
         }
+
         if self.x < 0 {
             self.x = 0;
             self.vx = self.vx*(-1);
@@ -33,6 +34,7 @@ impl SolidBody for Ball {
             self.vy = self.vy*(-1);
             self.y = getmaxy(self.window) as i16 - self.size;
         }
+
         if self.y < 0 {
             self.y = 0;
             self.vy = self.vy*(-1);
