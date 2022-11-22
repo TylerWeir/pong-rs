@@ -2,22 +2,23 @@ mod paddle;
 mod command;
 mod ball;
 mod game;
+mod physics;
 
 extern crate ncurses;
 use ncurses::*;
+use crate::physics::SolidBody;
 
 fn main() {
-    initscr();      /* Put the terminal in curses mode */
-    let mut my_paddle = paddle::Paddle::new();
+    let game_window = initscr();      /* Put the terminal in curses mode */
+    let mut game_ball = ball::Ball::new(game_window);
 
     loop {
         // Move
-        my_paddle.do_cmd(command::MoveRight{});
-        my_paddle.do_cmd(command::MoveUp{});
+        game_ball.update(100);
 
         // Draw the scene
         clear();        /* Clear the scene before drawing*/
-        my_paddle.draw(my_paddle.get_y() as i32, my_paddle.get_x() as i32);
+        game_ball.draw();
 
         // Draw to the screen and wait
         refresh();
