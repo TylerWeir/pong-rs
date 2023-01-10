@@ -13,7 +13,7 @@ fn main() {
     let (s, r) = unbounded();
 
     // Make a ball and give ownership to the thread 
-    let ball = ball::Ball::new();
+    let mut ball = ball::Ball::new();
     let _handler = thread::spawn(move || {
         ball.poll(r);
     });
