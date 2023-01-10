@@ -3,25 +3,26 @@ mod command;
 mod ball;
 mod game;
 mod physics;
+mod ipc;
 
-extern crate ncurses;
-use ncurses::*;
-use crate::physics::SolidBody;
+use std::{thread};
+use crossbeam::channel::unbounded;
+use crate::ipc::Messages;
 
 fn main() {
-    let game_window = initscr();      /* Put the terminal in curses mode */
-    let mut game_ball = ball::Ball::new(game_window);
+    let (s, r) = unbounded();
+
+    // Make a ball and give ownership to the thread 
+    let ball = ball::Ball::new();
+    let _handler = thread::spawn(move || {
+        ball.poll(r);
+    });
 
     loop {
-        // Move
-        game_ball.update(100);
-
-        // Draw the scene
-        clear();        /* Clear the scene before drawing*/
-        game_ball.draw();
-
-        // Draw to the screen and wait
-        refresh();
-        std::thread::sleep(std::time::Duration::from_millis(100));
+        match s.try_send(Messages::TickMsg) {
+            Ok(_) => println!("tick message sent"),
+            Err(_err) => println!("error sending message"),
+        }
+        std::thread::sleep(std::time::Duration::from_millis(500));
     }
 }
