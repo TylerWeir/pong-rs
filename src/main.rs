@@ -4,6 +4,7 @@ mod ball;
 mod game;
 mod physics;
 mod ipc;
+mod broker;
 
 use std::{thread};
 use crossbeam::channel::unbounded;
@@ -11,7 +12,7 @@ use crate::ipc::Messages;
 use crate::ipc::Actor;
 
 fn main() {
-    let (broker_s, _broker_r) = unbounded();
+    let (broker_s, broker_r) = unbounded();
     
     // Spin up actors
     //
@@ -30,18 +31,18 @@ fn main() {
        paddle.poll(paddle_r);
     });
 
-
+    let members = vec!(paddle_s, ball_s);
+    let broker = broker::Broker::new(members);
+    let _handler = thread::spawn(move || {
+        broker.poll(broker_r);
+    });
 
     loop {
-        match ball_s.try_send(Messages::TickMsg) {
+        match broker_s.try_send(Messages::TickMsg) {
             Ok(_) => println!("tick message sent"),
             Err(_err) => println!("error sending message"),
         }
 
-        match paddle_s.try_send(Messages::TickMsg) {
-            Ok(_) => println!("tick message sent"),
-            Err(_err) => println!("error sending message"),
-        }
         std::thread::sleep(std::time::Duration::from_millis(500));
     }
 }

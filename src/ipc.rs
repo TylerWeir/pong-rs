@@ -1,4 +1,5 @@
 // Enum defining all message types for ipc between actors
+#[derive(Clone)]
 pub enum Messages {
     TickMsg,
 }
