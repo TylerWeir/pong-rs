@@ -1,6 +1,7 @@
 use crate::command::Moveable;
 use crate::physics::SolidBody;
 use crate::ipc::Messages;
+use crate::ipc::Actor;
 
 pub struct Ball {
     x: i16,
@@ -26,9 +27,22 @@ impl Moveable for Ball {
     }
 }
 
+impl Actor for Ball {
+    fn poll(&self, r: crossbeam::channel::Receiver<Messages>) {
+        println!("ball is polling for messages...");
+
+        loop {
+            match r.recv() {
+                Ok(_msg) => println!("ball receiving a message!"),
+                Err(_err) => println!("ball experiencing errors!"),
+            }
+        }               
+    }
+}
+
 impl Ball {
 
-    pub fn new() -> Ball {
+    pub fn new(_s: crossbeam::channel::Sender<Messages>) -> Ball {
         Ball {
          x: 0,
          y: 0,
@@ -36,15 +50,5 @@ impl Ball {
          vy: 1,
         }
     }
-    
-    pub fn poll(&self, r: crossbeam::channel::Receiver<Messages>) {
-        println!("ball is polling for messages...");
 
-        loop {
-            match r.recv() {
-                Ok(_msg) => println!("receiving a message!"),
-                Err(_err) => println!("experiencing errors!"),
-            }
-        }               
-    }
 }
