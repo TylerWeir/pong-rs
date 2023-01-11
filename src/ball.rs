@@ -1,6 +1,7 @@
 use crate::command::Moveable;
 use crate::physics::SolidBody;
 use crate::ipc::Messages;
+use crate::ipc::Actor;
 
 pub struct Ball {
     x: i16,
@@ -26,9 +27,22 @@ impl Moveable for Ball {
     }
 }
 
-impl Ball {
+impl Actor for Ball {
+    fn poll(&self, r: crossbeam::channel::Receiver<Messages>) {
+        println!("ball is polling for messages...");
 
-    pub fn new() -> Ball {
+        loop {
+            match r.recv() {
+                Ok(_msg) => println!("ball receiving a message!"),
+                Err(_err) => println!("ball experiencing errors!"),
+            }
+        }               
+    }
+}
+
+
+impl Ball {
+    pub fn new(_s: crossbeam::channel::Sender<Messages>) -> Ball {
         Ball {
          x: 0,
          y: 0,
@@ -37,48 +51,4 @@ impl Ball {
         }
     }
 
-    fn handle_message(&mut self, msg: Messages) {
-        match msg {
-            Messages::TickMsg => self.update(),
-        }
-    }
-    
-    pub fn poll(&mut self, r: crossbeam::channel::Receiver<Messages>) {
-        println!("ball is polling for messages...");
-
-        loop {
-            match r.recv() {
-                Ok(msg) => self.handle_message(msg),
-                Err(_err) => println!("experiencing errors!"),
-            }
-        }               
-    }
 }
-
-
-#[cfg(test)]
-mod tests {
-    use crate::ball::Ball;
-    use crate::ipc::Messages;
-
-    #[test]
-    fn test_new() {
-        let ball = Ball::new();
-        assert!(ball.x == 0);
-        assert!(ball.y == 0);
-        assert!(ball.vx == 1);
-        assert!(ball.vx == 1);
-    }
-
-    #[test]
-    fn test_cmds() {
-        let mut ball = Ball::new();
-        ball.handle_message(Messages::TickMsg);
-
-        assert!(ball.x == 0 + ball.vx);
-        assert!(ball.y == 0 + ball.vy);
-
-    }
-}
-
-
