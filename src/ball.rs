@@ -8,6 +8,7 @@ pub struct Ball {
     y: i16,
     vx: i16,
     vy: i16,
+    sender: crossbeam::channel::Sender<Messages>,
 }
 
 impl SolidBody for Ball {
@@ -33,7 +34,7 @@ impl Actor for Ball {
 
         loop {
             match r.recv() {
-                Ok(_msg) => println!("ball receiving a message!"),
+                Ok(msg) => self.handle_messages(msg),
                 Err(_err) => println!("ball experiencing errors!"),
             }
         }               
@@ -42,13 +43,21 @@ impl Actor for Ball {
 
 
 impl Ball {
-    pub fn new(_s: crossbeam::channel::Sender<Messages>) -> Ball {
+    pub fn new(s: crossbeam::channel::Sender<Messages>) -> Ball {
         Ball {
          x: 0,
          y: 0,
          vx: 1,
          vy: 1,
+         sender: s,
         }
     }
 
+    pub fn handle_messages(&self, msg: Messages) {
+        match msg {
+            Messages::TickMsg => println!("ball recieved a tick message"),
+            Messages::BoardSizeMsg(x, y) => println!("Ball received board size {} {}", x, y),
+            Messages::DrawMsg => println!("ball received a draw message"),
+        } 
+    }
 }

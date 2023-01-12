@@ -4,6 +4,7 @@ mod ball;
 mod game;
 mod physics;
 mod ipc;
+mod board;
 mod broker;
 
 use std::thread;
@@ -31,7 +32,13 @@ fn main() {
        paddle.poll(paddle_r);
     });
 
-    let members = vec!(paddle_s, ball_s);
+    let (board_s, board_r) = unbounded();
+    let board = board::Board::new(broker_s.clone());
+    let _handler = thread::spawn(move || {
+       board.poll(board_r);
+    });
+
+    let members = vec!(paddle_s, ball_s, board_s);
     let broker = broker::Broker::new(members);
     let _handler = thread::spawn(move || {
         broker.poll(broker_r);
