@@ -1,5 +1,5 @@
-use crate::ipc::Messages;
-use crate::ipc::Actor;
+use crate::actor_utils::Messages;
+use crate::actor_utils::Actor;
 
 extern crate ncurses;
 use ncurses::*;

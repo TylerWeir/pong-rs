@@ -1,7 +1,7 @@
 use crate::command::Moveable;
 use crate::physics::SolidBody;
-use crate::ipc::Messages;
-use crate::ipc::Actor;
+use crate::actor_utils::Messages;
+use crate::actor_utils::Actor;
 
 pub struct Ball {
     x: i16,

@@ -1,6 +1,6 @@
 use crate::command::Moveable;
-use crate::ipc::Messages;
-use crate::ipc::Actor;
+use crate::actor_utils::Messages;
+use crate::actor_utils::Actor;
 
 // Represents a paddle in the game pong. Note that a paddle 
 // can be either a human player or a computer player. Paddles

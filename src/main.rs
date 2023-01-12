@@ -3,14 +3,14 @@ mod command;
 mod ball;
 mod game;
 mod physics;
-mod ipc;
+mod actor_utils;
 mod board;
 mod broker;
 
 use std::thread;
 use crossbeam::channel::unbounded;
-use crate::ipc::Messages;
-use crate::ipc::Actor;
+use crate::actor_utils::Messages;
+use crate::actor_utils::Actor;
 
 fn main() {
     let (broker_s, broker_r) = unbounded();
