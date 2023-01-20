@@ -7,7 +7,7 @@ pub struct Broker {
 
 
 impl Actor for Broker {
-    fn poll(&self, r: crossbeam::channel::Receiver<Messages>) {
+    fn poll(&mut self, r: crossbeam::channel::Receiver<Messages>) {
         println!("Broker is read to pass along messages...");
 
         loop {

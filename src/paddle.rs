@@ -2,9 +2,6 @@ use crate::command::Moveable;
 use crate::ipc::Messages;
 use crate::ipc::Actor;
 
-// Represents a paddle in the game pong. Note that a paddle 
-// can be either a human player or a computer player. Paddles
-// accept input the form of commands.
 pub struct Paddle {
     x: i16,
     y: i16,
@@ -21,7 +18,7 @@ impl Moveable for &mut Paddle {
 }
 
 impl Actor for Paddle {
-    fn poll (&self, r: crossbeam::channel::Receiver<Messages>) {
+    fn poll (&mut self, r: crossbeam::channel::Receiver<Messages>) {
         println!("paddle is polling for messages...");
 
         loop {
