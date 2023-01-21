@@ -2,8 +2,8 @@ extern crate ncurses;
 
 use ncurses::*;
 
-use crate::ipc::Messages;
-use crate::ipc::Actor;
+use crate::actor_utils::Messages;
+use crate::actor_utils::Actor;
 use crate::ball::Ball;
 
 pub struct Screen {
@@ -31,7 +31,6 @@ impl Screen {
             Messages::Tick => self.paint(),
             Messages::BallPos(x, y) => self.update_ball(x, y),
         }
-
     }
 
     // Creates a new screen with zero valued fields

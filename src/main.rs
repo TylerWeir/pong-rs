@@ -3,14 +3,14 @@ mod command;
 mod ball;
 mod game;
 mod physics;
-mod ipc;
+mod actor_utils;
 mod broker;
 mod screen;
 
 use std::thread;
 use crossbeam::channel::unbounded;
-use crate::ipc::Messages;
-use crate::ipc::Actor;
+use crate::actor_utils::Messages;
+use crate::actor_utils::Actor;
 
 fn main() {
     let (broker_s, broker_r) = unbounded();
@@ -44,7 +44,6 @@ fn main() {
     let _handler = thread::spawn(move || {
         broker.poll(broker_r);
     });
-
 
     loop {
         match broker_s.try_send(Messages::Tick) {

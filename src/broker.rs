@@ -1,5 +1,5 @@
-use crate::ipc::Actor;
-use crate::ipc::Messages;
+use crate::actor_utils::Actor;
+use crate::actor_utils::Messages;
 
 pub struct Broker {
    members: Vec<crossbeam::channel::Sender<Messages>>

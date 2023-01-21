@@ -2,8 +2,8 @@ extern crate ncurses;
 
 use crate::command::Moveable;
 use crate::physics::SolidBody;
-use crate::ipc::Messages;
-use crate::ipc::Actor;
+use crate::actor_utils::Messages;
+use crate::actor_utils::Actor;
 
 pub struct Ball {
     x: i16,
@@ -36,7 +36,7 @@ impl Actor for Ball {
 
         loop {
             match r.recv() {
-                Ok(msg) => self.handle_msg(msg.clone()),
+                Ok(msg) => self.handle_message(msg),
                 Err(_err) => println!("ball experiencing errors!"),
             }
         }               
@@ -60,7 +60,7 @@ impl Ball {
         ncurses::mvaddstr(y as i32 + 1, x as i32, "##");
     }
 
-    fn handle_msg(&mut self, msg:Messages) {
+    fn handle_message(&mut self, msg:Messages) {
         match msg {
             Messages::Tick => self.tick(),
             _ => return, 
