@@ -1,4 +1,4 @@
-# pong-rs
+# pong-rs (WIP)
 Pong in the terminal
 
 ```
