@@ -6,6 +6,7 @@ mod physics;
 mod actor_utils;
 mod broker;
 mod screen;
+mod input;
 
 use std::thread;
 use crossbeam::channel::unbounded;
@@ -39,7 +40,13 @@ fn main() {
         screen.poll(screen_r);
     });
 
-    let members = vec!(paddle_s, ball_s, screen_s);
+    let (input_s, input_r) = unbounded();
+    let mut input = input::Input::new(broker_s.clone());
+    let _handler = thread::spawn(move || {
+        input.poll(input_r);
+    });
+
+    let members = vec!(paddle_s, ball_s, screen_s, input_s);
     let mut broker = broker::Broker::new(members);
     let _handler = thread::spawn(move || {
         broker.poll(broker_r);
