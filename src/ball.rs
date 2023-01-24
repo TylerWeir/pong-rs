@@ -4,6 +4,7 @@ use crate::command::Moveable;
 use crate::physics::SolidBody;
 use crate::actor_utils::Messages;
 use crate::actor_utils::Actor;
+use crate::actor_utils::Point;
 
 pub struct Ball {
     x: i16,
@@ -55,11 +56,6 @@ impl Ball {
         }
     }
 
-    pub fn draw(x:i16, y:i16) {
-        ncurses::mvaddstr(y as i32, x as i32, "##");
-        ncurses::mvaddstr(y as i32 + 1, x as i32, "##");
-    }
-
     fn handle_message(&mut self, msg:Messages) {
         match msg {
             Messages::Tick => self.tick(),
@@ -74,6 +70,11 @@ impl Ball {
         match self.broker.try_send(Messages::BallPos(self.x, self.y)) {
             Ok(_) => println!("ball pos message sent"),
             Err(_err) => println!("ball error sending pos message"),
+        }
+
+        match self.broker.try_send(Messages::Draw(Point::new(self.x, self.y), ['a'; 10])) {
+            Ok(_) => println!("draw send"),
+            Err(_err) => println!("draw not send"),
         }
     }
 }

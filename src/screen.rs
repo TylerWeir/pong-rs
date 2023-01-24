@@ -4,12 +4,9 @@ use ncurses::*;
 
 use crate::actor_utils::Messages;
 use crate::actor_utils::Actor;
-use crate::ball::Ball;
+use crate::actor_utils::Point;
 
-pub struct Screen {
-    ball_x: i16,
-    ball_y: i16,
-}
+pub struct Screen {}
 
 impl Actor for Screen {
     fn poll (&mut self, r: crossbeam::channel::Receiver<Messages>) {
@@ -29,7 +26,8 @@ impl Screen {
     pub fn handle_msg(&mut self, msg:Messages) {
         match msg { 
             Messages::Tick => self.paint(),
-            Messages::BallPos(x, y) => self.update_ball(x, y),
+            Messages::Draw(point, sprite) => self.draw(point, sprite),
+            _ => return,
         }
     }
 
@@ -43,21 +41,17 @@ impl Screen {
         ncurses::mvaddstr(10, 10, "hello there");
         ncurses::refresh();
 
-        Screen {
-            ball_x: 0,
-            ball_y: 0,
-        }
-    }
-
-    pub fn update_ball(&mut self, x: i16, y: i16) {
-        self.ball_x = x;
-        self.ball_y = y;
+        Screen {}
     }
 
     pub fn paint(&mut self) {
-        ncurses::clear();
-        Ball::draw(self.ball_x, self.ball_y);
         refresh();
+        ncurses::clear();
+    }
+
+    pub fn draw(&self, p:Point, sprite:[char;10]) {
+        let tmp: String = sprite.iter().collect();
+        ncurses::mvaddstr((p.y).into(), (p.x).into(), &tmp);
     }
 }
 
