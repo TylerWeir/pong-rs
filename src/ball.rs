@@ -33,12 +33,10 @@ impl Moveable for Ball {
 
 impl Actor for Ball {
     fn poll(&mut self, r: crossbeam::channel::Receiver<Messages>) {
-        println!("ball is polling for messages...");
-
         loop {
             match r.recv() {
                 Ok(msg) => self.handle_message(msg),
-                Err(_err) => println!("ball experiencing errors!"),
+                Err(_err) => panic!("Ball failed to receive a message"),
             }
         }               
     }
@@ -68,13 +66,13 @@ impl Ball {
         self.y += 1;
 
         match self.broker.try_send(Messages::BallPos(self.x, self.y)) {
-            Ok(_) => println!("ball pos message sent"),
-            Err(_err) => println!("ball error sending pos message"),
+            Ok(_) => (), 
+            Err(_err) => panic!("Ball failed to send position message"),
         }
 
         match self.broker.try_send(Messages::Draw(Point::new(self.x, self.y), ['a'; 10])) {
-            Ok(_) => println!("draw send"),
-            Err(_err) => println!("draw not send"),
+            Ok(_) => (), 
+            Err(_err) => panic!("Ball failed to send draw message"),
         }
     }
 }

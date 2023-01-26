@@ -8,12 +8,10 @@ pub struct Broker {
 
 impl Actor for Broker {
     fn poll(&mut self, r: crossbeam::channel::Receiver<Messages>) {
-        println!("Broker is read to pass along messages...");
-
         loop {
             match r.recv() {
                 Ok(msg) => self.pass_along(msg),
-                Err(_err) => println!("Broker had error"),
+                Err(_err) => panic!("Broker failed to receive a message"),
             }
         }
     }
@@ -30,8 +28,8 @@ impl Broker {
     fn pass_along(&self, msg: Messages) {
         for s in &self.members {
             match s.try_send(msg.clone()) {
-                Ok(_) => println!("broker passed along a message"),
-                Err(_err) => println!("broker had an error passing the message"),
+                Ok(_) => (),
+                Err(_err) => panic!("Broker failed to send a message"),
             }
         }
     }

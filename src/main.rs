@@ -47,8 +47,8 @@ fn main() {
 
     loop {
         match broker_s.try_send(Messages::Tick) {
-            Ok(_) => println!("tick message sent"),
-            Err(_err) => println!("error sending message"),
+            Ok(_) => (),
+            Err(_err) => panic!("Main failed to send a tick message"), 
         }
 
         std::thread::sleep(std::time::Duration::from_millis(100));

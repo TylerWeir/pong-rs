@@ -19,12 +19,10 @@ impl Moveable for &mut Paddle {
 
 impl Actor for Paddle {
     fn poll (&mut self, r: crossbeam::channel::Receiver<Messages>) {
-        println!("paddle is polling for messages...");
-
         loop {
             match r.recv() {
-                Ok(_msg) => println!("paddle received a message!"),
-                Err(_err) => println!("paddle experiencing errors"),
+                Ok(_msg) => (),
+                Err(_err) => panic!("Paddle failed to receive a message"),
             }
         }
     }

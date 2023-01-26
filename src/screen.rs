@@ -10,12 +10,10 @@ pub struct Screen {}
 
 impl Actor for Screen {
     fn poll (&mut self, r: crossbeam::channel::Receiver<Messages>) {
-        println!("screen is polling for messages...");
-
         loop {
             match r.recv() {
                 Ok(msg) => self.handle_msg(msg.clone()) ,
-                Err(_err) => println!("Screen experiencing errors"),
+                Err(_err) => panic!("Screen failed to receive a message"),
             }
         }
     }
