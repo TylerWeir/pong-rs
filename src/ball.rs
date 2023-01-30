@@ -7,9 +7,6 @@ use crate::actor_utils::Actor;
 use crate::actor_utils::Point;
 use crate::utils::sprite::Sprite;
 
-// A reference with 'static lifetime:
-static BALL_SPRITE: &str = "BALL";
-
 pub struct Ball {
     x: i16,
     y: i16,
@@ -58,7 +55,7 @@ impl Ball {
          vx: 1,
          vy: 1,
          broker: s,
-         sprite: Sprite::new(BALL_SPRITE),
+         sprite: Sprite::new("@@\n@@"),
         }
     }
 
