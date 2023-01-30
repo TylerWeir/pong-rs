@@ -1,3 +1,4 @@
+use crate::utils::sprite::Sprite;
 //
 // Enum defining all message types for actor_utils between actors
 //
@@ -5,7 +6,7 @@
 pub enum Messages {
     Tick,
     BallPos(i16, i16),
-    Draw(Point, [char; 10]),    // This seems error prone as I'm really just implementing c strings...
+    Draw(Point, Sprite),
 }
 
 pub trait Actor {
@@ -26,9 +27,3 @@ impl Point {
         Point {x, y}
     }
 }
-
-//
-// String backed sprite class
-//
-// pub struct Sprite {
-// }

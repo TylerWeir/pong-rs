@@ -6,6 +6,7 @@ mod physics;
 mod actor_utils;
 mod broker;
 mod screen;
+mod utils;
 
 use std::thread;
 use crossbeam::channel::unbounded;
@@ -50,7 +51,6 @@ fn main() {
             Ok(_) => (),
             Err(_err) => panic!("Main failed to send a tick message"), 
         }
-
         std::thread::sleep(std::time::Duration::from_millis(100));
     }
 }

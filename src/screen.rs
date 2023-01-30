@@ -5,6 +5,7 @@ use ncurses::*;
 use crate::actor_utils::Messages;
 use crate::actor_utils::Actor;
 use crate::actor_utils::Point;
+use crate::utils::sprite::Sprite;
 
 pub struct Screen {}
 
@@ -24,7 +25,7 @@ impl Screen {
     pub fn handle_msg(&mut self, msg:Messages) {
         match msg { 
             Messages::Tick => self.paint(),
-            Messages::Draw(point, sprite) => self.draw(point, sprite),
+            Messages::Draw(pos, sprite) => self.draw(pos, sprite),
             _ => return,
         }
     }
@@ -47,9 +48,8 @@ impl Screen {
         ncurses::clear();
     }
 
-    pub fn draw(&self, p:Point, sprite:[char;10]) {
-        let tmp: String = sprite.iter().collect();
-        ncurses::mvaddstr((p.y).into(), (p.x).into(), &tmp);
+    pub fn draw(&self, p:Point, sprite:Sprite) {
+        sprite.draw(p, ncurses::curscr());
     }
 }
 

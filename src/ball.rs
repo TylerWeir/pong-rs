@@ -5,6 +5,7 @@ use crate::physics::SolidBody;
 use crate::actor_utils::Messages;
 use crate::actor_utils::Actor;
 use crate::actor_utils::Point;
+use crate::utils::sprite::Sprite;
 
 pub struct Ball {
     x: i16,
@@ -12,6 +13,7 @@ pub struct Ball {
     vx: i16,
     vy: i16,
     broker: crossbeam::channel::Sender<Messages>,
+    sprite: Sprite
 }
 
 impl SolidBody for Ball {
@@ -51,13 +53,14 @@ impl Ball {
          vx: 1,
          vy: 1,
          broker: s,
+         sprite: Sprite::new("@@\n@@"),
         }
     }
 
     fn handle_message(&mut self, msg:Messages) {
         match msg {
             Messages::Tick => self.tick(),
-            _ => return, 
+            _ => (), 
         }
     }
 
@@ -70,9 +73,9 @@ impl Ball {
             Err(_err) => panic!("Ball failed to send position message"),
         }
 
-        match self.broker.try_send(Messages::Draw(Point::new(self.x, self.y), ['a'; 10])) {
-            Ok(_) => (), 
-            Err(_err) => panic!("Ball failed to send draw message"),
+        match self.broker.try_send(Messages::Draw(Point::new(self.x, self.y), self.sprite)) {
+            Ok(_) => (),
+            Err(_err) => println!("Ball failed to send draw message"),
         }
     }
 }
