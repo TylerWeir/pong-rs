@@ -31,7 +31,7 @@ impl Screen {
     }
 
     // Creates a new screen with zero valued fields
-    pub fn new(_s: crossbeam::channel::Sender<Messages>) -> Screen {
+    pub fn new(s: crossbeam::channel::Sender<Messages>) -> Screen {
 
         /* Setup ncurses */
         ncurses::initscr();
@@ -40,7 +40,10 @@ impl Screen {
         ncurses::mvaddstr(10, 10, "hello there");
         ncurses::refresh();
 
-        Screen {}
+        let screen = Screen {};
+        screen.tell_size(s);
+
+        screen
     }
 
     pub fn paint(&mut self) {
@@ -50,6 +53,16 @@ impl Screen {
 
     pub fn draw(&self, p:Point, sprite:Sprite) {
         sprite.draw(p, ncurses::curscr());
+    }
+
+    pub fn tell_size(&self, s: crossbeam::channel::Sender<Messages>) {
+        let mut x: i32 = 0;
+        let mut y: i32 = 0;
+        ncurses::getmaxyx(ncurses::curscr(), &mut y,&mut x);
+        match s.try_send(Messages::ScreenSize(x,y)) {
+            Ok(_) => (), 
+            Err(_) => (),
+        }
     }
 }
 

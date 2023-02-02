@@ -2,7 +2,6 @@ mod paddle;
 mod command;
 mod ball;
 mod game;
-mod physics;
 mod actor_utils;
 mod broker;
 mod screen;
