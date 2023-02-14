@@ -13,6 +13,7 @@ impl Actor for Paddle {
     fn poll (&mut self, r: crossbeam::channel::Receiver<Messages>) {
         loop {
             match r.recv() {
+                Ok(Messages::Terminate) => return,
                 Ok(msg) => self.handle_message(msg),
                 Err(_err) => println!("paddle experiencing errors"),
             }
@@ -40,6 +41,8 @@ impl Paddle {
     fn handle_message(&mut self, msg:Messages) {
         match msg {
             Messages::Tick => self.tick(),
+            Messages::UpCmd => self.pos.add_y(1),
+            Messages::DownCmd => self.pos.add_y(-1),
             _ => return, 
         }
     }
@@ -49,12 +52,36 @@ impl Paddle {
 mod tests{
     use super::*;
 
-#[test]
+    #[test]
     fn test_construction() {
-        let (test_broker_s, _) = crossbeam::channel::unbounded();
-        let my_paddle = Paddle::new(Point::new(0, 0), test_broker_s.clone());
+        let (sender, _) = crossbeam::channel::unbounded();
+        let my_paddle = Paddle::new(Point::new(0, 0), sender.clone());
 
         assert_eq!(my_paddle.pos, Point::new(0, 0));
+    }
+
+    #[test]
+    fn test_move_up() {
+        let (sender, r) = crossbeam::channel::unbounded();
+        let mut my_paddle = Paddle::new(Point::new(0, 10), sender.clone());
+
+        match sender.try_send(Messages::UpCmd) { _ => () }
+        match sender.try_send(Messages::Terminate) { _ => () }
+        my_paddle.poll(r);
+
+        assert_eq!(my_paddle.pos, Point::new(0, 11));
+    }
+
+    #[test]
+    fn test_move_down() {
+        let (sender, r) = crossbeam::channel::unbounded();
+        let mut my_paddle = Paddle::new(Point::new(0, 10), sender.clone());
+
+        match sender.try_send(Messages::DownCmd) { _ => () }
+        match sender.try_send(Messages::Terminate) { _ => () }
+        my_paddle.poll(r);
+
+        assert_eq!(my_paddle.pos, Point::new(0, 9));
     }
 
 }
