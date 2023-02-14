@@ -26,7 +26,7 @@ impl Paddle {
     pub fn new(init_pos: Point, s: crossbeam::channel::Sender<Messages>) -> Paddle {
         Paddle {
             pos: init_pos,
-            sprite: Sprite::new("##\n##\n##\n##\n##\n##"),
+            sprite: Sprite::new(2, 6,"##\n##\n##\n##\n##\n##"),
             broker: s
         }
     }

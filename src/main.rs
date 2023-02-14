@@ -1,7 +1,6 @@
 mod paddle;
 mod ball;
 mod game;
-mod physics;
 mod actor_utils;
 mod broker;
 mod screen;

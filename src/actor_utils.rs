@@ -5,11 +5,12 @@ use crate::utils::sprite::Sprite;
 #[derive(Clone)]
 pub enum Messages {
     Tick,
-    BallPos(i16, i16),
+    BallPos(i32, i32),
     Draw(Point, Sprite),
     UpCmd,
     DownCmd,
     Terminate,
+    ScreenSize(i32, i32),
 }
 
 pub trait Actor {
@@ -24,20 +25,20 @@ pub trait Actor {
 #[derive(Debug)]
 #[derive(PartialEq)]
 pub struct Point {
-    pub x: i16,
-    pub y: i16,
+    pub x: i32,
+    pub y: i32,
 }
 
 impl Point {
-    pub fn new(x: i16, y: i16) -> Point {
+    pub fn new(x: i32, y: i32) -> Point {
         Point {x, y}
     }
 
-    pub fn add_x(&mut self, x: i16) {
+    pub fn add_x(&mut self, x: i32) {
         self.x += x;
     }
 
-    pub fn add_y(&mut self, y: i16) {
+    pub fn add_y(&mut self, y: i32) {
         self.y += y;
     }
 
