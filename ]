@@ -22,12 +22,4 @@ impl Sprite {
     pub fn new (w:i32, h:i32, s:&'static str) -> Sprite {
         Sprite {width:w, height:h, sprite:s}
     }
-
-    pub fn get_width(&self) -> i32 {
-        self.width
-    }
-
-    pub fn get_height(&self) -> i32 {
-        self.height
-    }
 }

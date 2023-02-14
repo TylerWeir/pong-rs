@@ -1,24 +1,13 @@
-use crate::command::Moveable;
 use crate::utils::sprite::Sprite;
 use crate::actor_utils::Point;
 use crate::actor_utils::Messages;
 use crate::actor_utils::Actor;
 
 pub struct Paddle {
-    x: i16,
-    y: i16,
+    x: i32,
+    y: i32,
     sprite: Sprite,
     broker: crossbeam::channel::Sender<Messages>,
-}
-
-impl Moveable for &mut Paddle {
-    fn add_x(&mut self, value: i16) {
-        self.x = self.x + value;
-    }
-
-    fn add_y(&mut self, value: i16) {
-        self.y = self.y + value;
-    }
 }
 
 impl Actor for Paddle {
@@ -38,7 +27,7 @@ impl Paddle {
         Paddle {
             x: 5,
             y: 5,
-            sprite: Sprite::new("##\n##\n##\n##\n##\n##t"),
+            sprite: Sprite::new(2, 6, "##\n##\n##\n##\n##\n##"),
             broker: s
         }
     }
