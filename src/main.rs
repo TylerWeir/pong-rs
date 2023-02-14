@@ -34,13 +34,20 @@ fn main() {
        paddle.poll(paddle_r);
     });
 
+    // TODO Need to set up a virtual screen
+    let (ai_paddle_s, ai_paddle_r) = unbounded();
+    let mut paddle = paddle::Paddle::new(Point::new(30, 5), broker_s.clone());
+    let _handler = thread::spawn(move || {
+       paddle.poll(ai_paddle_r);
+    });
+
     let (screen_s, screen_r) = unbounded();
     let mut screen = screen::Screen::new(broker_s.clone());
     let _handler = thread::spawn(move || {
         screen.poll(screen_r);
     });
 
-    let members = vec!(paddle_s, ball_s, screen_s);
+    let members = vec!(ai_paddle_s, paddle_s, ball_s, screen_s);
     let mut broker = broker::Broker::new(members);
     let _handler = thread::spawn(move || {
         broker.poll(broker_r);
