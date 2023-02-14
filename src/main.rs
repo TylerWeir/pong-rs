@@ -6,6 +6,7 @@ mod actor_utils;
 mod broker;
 mod screen;
 mod utils;
+mod controllers;
 
 use std::thread;
 use crossbeam::channel::unbounded;
@@ -41,13 +42,20 @@ fn main() {
        paddle.poll(ai_paddle_r);
     });
 
+    // AI controller send messages directly to the ai paddle
+    let (ai_s, ai_r) = unbounded();
+    let mut ai = controllers::ai::AI::new(ai_paddle_s.clone());
+    let _handler = thread::spawn(move || {
+        ai.poll(ai_r);
+    });
+
     let (screen_s, screen_r) = unbounded();
     let mut screen = screen::Screen::new(broker_s.clone());
     let _handler = thread::spawn(move || {
         screen.poll(screen_r);
     });
 
-    let members = vec!(ai_paddle_s, paddle_s, ball_s, screen_s);
+    let members = vec!(ai_paddle_s, ai_s, paddle_s, ball_s, screen_s);
     let mut broker = broker::Broker::new(members);
     let _handler = thread::spawn(move || {
         broker.poll(broker_r);
