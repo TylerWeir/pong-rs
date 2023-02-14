@@ -1,24 +1,12 @@
-use crate::command::Moveable;
 use crate::utils::sprite::Sprite;
 use crate::actor_utils::Point;
 use crate::actor_utils::Messages;
 use crate::actor_utils::Actor;
 
 pub struct Paddle {
-    x: i16,
-    y: i16,
+    pos: Point,
     sprite: Sprite,
     broker: crossbeam::channel::Sender<Messages>,
-}
-
-impl Moveable for &mut Paddle {
-    fn add_x(&mut self, value: i16) {
-        self.x = self.x + value;
-    }
-
-    fn add_y(&mut self, value: i16) {
-        self.y = self.y + value;
-    }
 }
 
 impl Actor for Paddle {
@@ -34,17 +22,16 @@ impl Actor for Paddle {
 
 impl Paddle {
     // Creates a new paddle with zero valued fields
-    pub fn new(s: crossbeam::channel::Sender<Messages>) -> Paddle {
+    pub fn new(init_pos: Point, s: crossbeam::channel::Sender<Messages>) -> Paddle {
         Paddle {
-            x: 5,
-            y: 5,
+            pos: init_pos,
             sprite: Sprite::new("##\n##\n##\n##\n##\n##t"),
             broker: s
         }
     }
 
     fn tick(&self) {
-        match self.broker.try_send(Messages::Draw(Point::new(self.x, self.y), self.sprite)) {
+        match self.broker.try_send(Messages::Draw(self.pos, self.sprite)) {
             Ok(_) => println!("draw send"),
             Err(_err) => println!("draw not send"),
         }
@@ -56,5 +43,19 @@ impl Paddle {
             _ => return, 
         }
     }
+}
+
+#[cfg(test)]
+mod tests{
+    use super::*;
+
+#[test]
+    fn test_construction() {
+        let (test_broker_s, _) = crossbeam::channel::unbounded();
+        let my_paddle = Paddle::new(Point::new(0, 0), test_broker_s.clone());
+
+        assert_eq!(my_paddle.pos, Point::new(0, 0));
+    }
+
 }
 

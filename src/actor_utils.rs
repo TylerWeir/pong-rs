@@ -17,6 +17,9 @@ pub trait Actor {
 // Point struct for position representations 
 //
 #[derive(Clone)]
+#[derive(Copy)]
+#[derive(Debug)]
+#[derive(PartialEq)]
 pub struct Point {
     pub x: i16,
     pub y: i16,
@@ -27,3 +30,4 @@ impl Point {
         Point {x, y}
     }
 }
+

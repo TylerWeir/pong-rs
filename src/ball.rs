@@ -1,6 +1,5 @@
 extern crate ncurses;
 
-use crate::command::Moveable;
 use crate::physics::SolidBody;
 use crate::actor_utils::Messages;
 use crate::actor_utils::Actor;
@@ -20,16 +19,6 @@ impl SolidBody for Ball {
     fn update(&mut self) {
         self.x = self.x + self.vx;
         self.y = self.y + self.vy;
-    }
-}
-
-impl Moveable for Ball {
-    fn add_x(&mut self, value: i16) {
-        self.x = self.x + value;
-    }
-
-    fn add_y(&mut self, value: i16) {
-        self.y = self.y + value;
     }
 }
 
