@@ -41,7 +41,7 @@ impl Ball {
          max_x: 0,
          max_y: 0,
          broker: s,
-         sprite: Sprite::new(2, 2, "@@\n@@"),
+         sprite: Sprite::new(1, 1, "@"),
         }
     }
 

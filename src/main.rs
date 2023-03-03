@@ -34,7 +34,6 @@ fn main() {
        paddle.poll(paddle_r);
     });
 
-    // TODO Need to set up a virtual screen
     let (ai_paddle_s, ai_paddle_r) = unbounded();
     let mut paddle = paddle::Paddle::new(Point::new(30, 5), broker_s.clone());
     let _handler = thread::spawn(move || {

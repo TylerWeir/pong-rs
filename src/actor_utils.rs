@@ -6,6 +6,7 @@ use crate::utils::sprite::Sprite;
 pub enum Messages {
     Tick,
     BallPos(i32, i32),
+    PaddlePos(i32, i32),
     Draw(Point, Sprite),
     UpCmd,
     DownCmd,
